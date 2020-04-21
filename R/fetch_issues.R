@@ -22,13 +22,12 @@ prep_blank_dataframe <- function(results)
                          Status = character(number_results),
                          Assignee = character(number_results),
                          Last_Modified = character(number_results),
-                         Issue_Question = character(number_results),
                          stringsAsFactors = FALSE)
   return(items)
 }
 
 
-populate_dataframe <- function(JSON_results, destination_dataframe, issue_question)
+populate_dataframe <- function(JSON_results, destination_dataframe)
 {
   number_results <- length(JSON_results)
   if(number_results == 0)
@@ -41,17 +40,16 @@ populate_dataframe <- function(JSON_results, destination_dataframe, issue_questi
     destination_dataframe$Status[i] <- fix_empty(as.character(JSON_results[[i]]$fields$status$statusCategory$name))
     destination_dataframe$Assignee[i] <- fix_empty(as.character(JSON_results[[i]]$fields$assignee$displayName))
     destination_dataframe$Last_Modified[i] <- fix_empty(as.character(JSON_results[[i]]$fields$updated))
-    destination_dataframe$Issue_Question[i] <- issue_question
   }
 
   return(destination_dataframe)
 }
 
-fetch_issue_page <- function(query, username, token, issue_stamp)
+fetch_issue_page <- function(query, username, token)
 {
   JSON_results <- get_issues(query, username, token)
   issues <- prep_blank_dataframe(JSON_results)
-  issues <- populate_dataframe(JSON_results, issues, issue_stamp)
+  issues <- populate_dataframe(JSON_results, issues)
   return(issues)
 }
 
@@ -64,25 +62,24 @@ fetch_issue_page <- function(query, username, token, issue_stamp)
 #' @param jql JQL Query
 #' @param username Jira cloud username
 #' @param token Jira cloud API token
-#' @param issue_stamp A name to mark each item with
 #' @return A matrix of the infile
 #' @export
-fetch_issues <- function(site, jql, username, token, issue_stamp)
+jqlQuery <- function(site, jql, username, token)
 {
   #function will always try to fetch the second set of results instead of checking.
   #There is a logic hole here that assumes the query will always have a maximum of 50 results returned.
   #TODO Can fix by altering the URL to only fetch 50 for the first batch and iterate from there.
 
-  query <- paste0('https://', site, 'rest/api/2/search?jql=', url_encode(jql))
+  query <- paste0('https://', site, '/rest/api/2/search?jql=', url_encode(jql))
 
-  running_results <- fetch_issue_page(query, username, token, issue_stamp)
+  running_results <- fetch_issue_page(query, username, token)
 
   batch <- 1
   range <- batch * 50
 
   repeat{
     paginated_query <- paste0(query, '&startAt=',range)
-    next_page_results <- fetch_issue_page(paginated_query, username, token, "all_items")
+    next_page_results <- fetch_issue_page(paginated_query, username, token)
 
     if(length(next_page_results$Task)==0)
     {
