@@ -1,4 +1,5 @@
 library(httr)
+library(urltools)
 
 fix_empty <- function(x) {ifelse(length(x)==0,NA,x)}
 
@@ -59,18 +60,20 @@ fetch_issue_page <- function(query, username, token, issue_stamp)
 #'
 #' This function takes a JQL query and authentican artifacts and
 #' returns a dataframe of the issues with a small number of key fields.
-#'
-#' @param query JQL Query
+#' @param site The Jira Cloud site to run the query against
+#' @param jql JQL Query
 #' @param username Jira cloud username
 #' @param token Jira cloud API token
 #' @param issue_stamp A name to mark each item with
 #' @return A matrix of the infile
 #' @export
-fetch_issues <- function(query, username, token, issue_stamp)
+fetch_issues <- function(site, jql, username, token, issue_stamp)
 {
   #function will always try to fetch the second set of results instead of checking.
   #There is a logic hole here that assumes the query will always have a maximum of 50 results returned.
   #TODO Can fix by altering the URL to only fetch 50 for the first batch and iterate from there.
+
+  query <- paste0('https://', site, 'rest/api/2/search?jql=', url_encode(jql))
 
   running_results <- fetch_issue_page(query, username, token, issue_stamp)
 
