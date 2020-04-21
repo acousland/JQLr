@@ -62,7 +62,7 @@ fetch_issue_page <- function(query, username, token)
 #' @param jql JQL Query
 #' @param username Jira cloud username
 #' @param token Jira cloud API token
-#' @return A matrix of the infile
+#' @return A dataframe of the query results
 #' @export
 jqlQuery <- function(site, jql, username, token)
 {
