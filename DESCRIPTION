@@ -1,11 +1,10 @@
 Package: JQLr
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Query Jira for Issues
+Version: 1.0
+Author: Aaron Cousland
+Maintainer: Aaron Cousland <acousland@gmail.com>
+Description: Queries the Jira API to return issues from Jira Cloud. Also deals with paginated results from the API to return a single dataframe for the results.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -1,8 +1,16 @@
-library(httr)
-library(urltools)
 
+#' Helper function to blank out empyt results
+#'
+#' @param x thing to check if it's empty
+#' @return x or null
 fix_empty <- function(x) {ifelse(length(x)==0,NA,x)}
 
+#' Fetch the raw results
+#'
+#' @param query JQL results
+#' @param username authentication username
+#' @param token API token
+#' @return A empty dataframe
 get_issues <- function(query, username, token)
 {
   r <- GET(query,
@@ -14,6 +22,10 @@ get_issues <- function(query, username, token)
   return(result)
 }
 
+#' Make a blank dataframe that is the right size to put the JQL results into
+#'
+#' @param results JQL results
+#' @return A empty dataframe
 prep_blank_dataframe <- function(results)
 {
   number_results <- length(results)
@@ -26,7 +38,11 @@ prep_blank_dataframe <- function(results)
   return(items)
 }
 
-
+#' Populate data frame with results from JQL query
+#'
+#' @param JSON_results JQL results
+#' @param destination_dataframe The dataframe to write the results to
+#' @return A dataframe of the query results
 populate_dataframe <- function(JSON_results, destination_dataframe)
 {
   number_results <- length(JSON_results)
@@ -45,6 +61,16 @@ populate_dataframe <- function(JSON_results, destination_dataframe)
   return(destination_dataframe)
 }
 
+
+
+#' Fetch Issues from Jira Cloud - using URL
+#'
+#' This function takes a JQL query and authentican artifacts and
+#' returns a dataframe of the issues with a small number of key fields.
+#' @param query JQL Query
+#' @param username Jira cloud username
+#' @param token Jira cloud API token
+#' @return A dataframe of the query results
 fetch_issue_page <- function(query, username, token)
 {
   JSON_results <- get_issues(query, username, token)
