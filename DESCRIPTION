@@ -8,7 +8,7 @@ Description: Queries the Jira API to return issues from Jira Cloud. Also deals w
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports:
+Depends:
 	httr,
 	urltools
 RoxygenNote: 7.1.0

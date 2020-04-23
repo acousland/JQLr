@@ -13,8 +13,7 @@ fix_empty <- function(x) {ifelse(length(x)==0,NA,x)}
 #' @return A empty dataframe
 get_issues <- function(query, username, token)
 {
-  r <- httr::GET(query,
-           httr::authenticate(username, token))
+  r <- httr::GET(query, httr::authenticate(username, token))
 
   result <- httr::content(r,"parsed")
   result <- result$issues
