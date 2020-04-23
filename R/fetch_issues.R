@@ -14,7 +14,7 @@ fix_empty <- function(x) {ifelse(length(x)==0,NA,x)}
 get_issues <- function(query, username, token)
 {
   r <- httr::GET(query,
-           authenticate(username, token))
+           httr::authenticate(username, token))
 
   result <- httr::content(r,"parsed")
   result <- result$issues
